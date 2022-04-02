@@ -26,10 +26,20 @@ default_grid = np.transpose(np.array([
     ]))
 
 class Board:
-    def __init__(self, grid):
-        self.grid = grid
-        pass
-    
+    def __init__(self):
+        self.grid = default_grid
+        self.seed = np.arange(1, 10)
+        
+    # FUNCTION FOR GENERATING THE GRID AT THE BEGINNING OF THE GAME
+    def generate_grid(self):
+        np.random.shuffle(self.seed)
+        is_solved = False
+        while not is_solved:
+            if self.is_solution(0, 0):
+                is_solved = True
+            
+        self.seed = np.arange(1, 10)
+                
     # FUNCTION FOR DRAWING THE GRID
     def draw_grid(self) -> None:    
         WINDOW.fill((255, 255, 255))
@@ -75,7 +85,7 @@ class Board:
             elif i == 8 and j == 8:
                 return True
         pygame.event.pump()
-        for k in range(1, 10):
+        for k in self.seed:
             if self.is_valid(i, j, k):
                 self.grid[i][j] = k
                 global x, y
@@ -133,7 +143,8 @@ def result() -> None:
     
 # CORE GAME LOOP       
 def main() -> None:
-    game_board = Board(default_grid)    
+    game_board = Board() 
+    game_board.generate_grid()   
     clock = pygame.time.Clock()
     run = True
     click = False 
@@ -177,22 +188,7 @@ def main() -> None:
                     res_cond = False
                     error = False
                     solve_cond = False
-                    game_board.grid = np.array([
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],    
-# FUNCTION FOR CHECKING VALIDITY OF INPUT
-
-       
-# FUNCTION FOR FINDING A SOLUTION       
-
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    ])
+                    game_board.grid = np.zeros((9, 9))
                 if event.key == pygame.K_d:
                     res_cond = False
                     error = False
