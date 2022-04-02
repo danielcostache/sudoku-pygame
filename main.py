@@ -1,5 +1,4 @@
 import pygame
-import os
 import numpy as np
 
 pygame.font.init()
@@ -27,7 +26,6 @@ default_grid = np.transpose(np.array([
 
 class Board:
     def __init__(self):
-        self.grid = default_grid
         self.seed = np.arange(1, 10)
         
     # FUNCTION FOR GENERATING THE GRID AT THE BEGINNING OF THE GAME
@@ -35,7 +33,7 @@ class Board:
         np.random.shuffle(self.seed)
         is_solved = False
         while not is_solved:
-            if self.is_solution(0, 0):
+            if self.find_solution(0, 0):
                 is_solved = True
             
         self.seed = np.arange(1, 10)
@@ -75,7 +73,7 @@ class Board:
         return True
     
     # FUNCTION FOR FINDING A SOLUTION
-    def is_solution(self, i, j) -> bool:
+    def find_solution(self, i, j) -> bool:
         while self.grid[i][j]:
             if i < 8:
                 i += 1
@@ -95,7 +93,7 @@ class Board:
                 self.draw_grid()
                 pygame.display.update()
                 pygame.time.delay(25)
-                if self.is_solution(i, j):
+                if self.find_solution(i, j):
                     return True
                 else:
                     self.grid[i][j] = 0
@@ -184,18 +182,8 @@ def main() -> None:
                     value = 9
                 if event.key == pygame.K_RETURN:
                     solve_cond = True
-                if event.key == pygame.K_r:
-                    res_cond = False
-                    error = False
-                    solve_cond = False
-                    game_board.grid = np.zeros((9, 9))
-                if event.key == pygame.K_d:
-                    res_cond = False
-                    error = False
-                    solve_cond = False
-                    game_board.grid = default_grid
         if solve_cond:
-            if not game_board.is_solution(0, 0):
+            if not game_board.find_solution(0, 0):
                 error = True
             else:
                 res_cond = True
